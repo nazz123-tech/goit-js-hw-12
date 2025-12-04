@@ -1,16 +1,19 @@
-import axios from "axios";
-export async function getImagesByQuery(query) {
-    const baseURL = 'https://pixabay.com/api/';
+import axios from 'axios';
 
-    const params = {
-        key: '53454682-c39aa10f124dd5ded9ba537e3',
-        q: query,
-        image_type: 'photo',
-        orientation: 'horizontal',
-        safesearch: true,
-    };
+const BASE_URL = 'https://pixabay.com/api/';
+const API_KEY = '53454682-c39aa10f124dd5ded9ba537e3';
 
-    const response = await axios.get(baseURL,{params});
-    return response.data;
+export async function getImagesByQuery(query, page = 1) {
+  const params = {
+    key: API_KEY,
+    q: query,
+    image_type: 'photo',
+    orientation: 'horizontal',
+    safesearch: true,
+    page,
+    per_page: 15,
+  };
+
+  const response = await axios.get(BASE_URL, { params });
+  return response.data;
 }
-

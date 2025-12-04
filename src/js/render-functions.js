@@ -1,13 +1,16 @@
-import { refs } from "../main";
-
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
+const galleryEl = document.querySelector('.gallery');
+const loaderEl = document.querySelector('.loader');
+const loadMoreBtn = document.querySelector('.load-more');
 
-let lightbox = null;
+const lightbox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
 
-
-export function imageTemplate({
+function imageTemplate({
   largeImageURL,
   webformatURL,
   tags,
@@ -17,53 +20,61 @@ export function imageTemplate({
   downloads,
 }) {
   return `
-<li class="gallery-item">
-  <a class="gallery-link" href="${largeImageURL}">
-    <img class="gallery-image" src="${webformatURL}" alt="${tags}" />
-  </a>
-  <div class="info">
-    <p><b>Likes:</b> ${likes}</p>
-    <p><b>Views:</b> ${views}</p>
-    <p><b>Comments:</b> ${comments}</p>
-    <p><b>Downloads:</b> ${downloads}</p>
-  </div>
-</li>`;
+    <li class="gallery-item">
+      <a class="gallery-link" href="${largeImageURL}">
+        <img class="gallery-image" src="${webformatURL}" alt="${tags}" />
+      </a>
+      <div class="info">
+        <p><b>Likes:</b> ${likes}</p>
+        <p><b>Views:</b> ${views}</p>
+        <p><b>Comments:</b> ${comments}</p>
+        <p><b>Downloads:</b> ${downloads}</p>
+      </div>
+    </li>
+  `;
 }
 
-
-export function createImages(arr) {
-  return arr.map(imageTemplate).join('');
+function createGallery(images) {
+  return images.map(imageTemplate).join('');
 }
 
-
-export function clearGallery() {
-  refs.gallery.innerHTML = '';
+function clearGallery() {
+  galleryEl.innerHTML = '';
 }
 
-export function renderGallery(images, { append = false } = {}) {
-  const markup = createImages(images);
+function renderGallery(images, { append = false } = {}) {
+  const markup = createGallery(images);
 
   if (append) {
-    refs.gallery.insertAdjacentHTML('beforeend', markup);
+    galleryEl.insertAdjacentHTML('beforeend', markup);
   } else {
-    refs.gallery.innerHTML = markup;
-  }
-
-
-  if (!lightbox) {
-    lightbox = new SimpleLightbox('.gallery a', {
-      captionsData: 'alt',
-      captionDelay: 250,
-    });
+    galleryEl.innerHTML = markup;
   }
 
   lightbox.refresh();
 }
 
-export function showLoader() {
-  refs.loader.classList.remove('hidden');
+function showLoader() {
+  loaderEl.classList.remove('hidden');
 }
 
-export function hideLoader() {
-  refs.loader.classList.add('hidden');
+function hideLoader() {
+  loaderEl.classList.add('hidden');
 }
+
+function showLoadMoreButton() {
+  loadMoreBtn.classList.remove('hidden');
+}
+
+function hideLoadMoreButton() {
+  loadMoreBtn.classList.add('hidden');
+}
+
+export {
+  renderGallery,
+  clearGallery,
+  showLoader,
+  hideLoader,
+  showLoadMoreButton,
+  hideLoadMoreButton,
+};
